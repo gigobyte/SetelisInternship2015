@@ -4,6 +4,37 @@ using namespace std;
 
 typedef unsigned char byte;
 
+class TSPacket {
+	byte* buf_;
+	int size_;
+
+public:
+	TSPacket()
+	: size_(0),
+	  buf_(new byte[size_])
+	{}
+
+	~TSPacket() {
+		delete[] buf_;
+	}
+
+	void push_back(byte& e) {
+		buf_[size_++] = e;
+	}
+
+	void pretty_print() {
+		for(int i = 0; i < size_; ++i) {
+			printf("%X ", buf_[i]);
+		}
+
+		printf("\n");
+	}
+
+	int get_size() {
+		return size_;
+	}
+};
+
 class VideoFile {
 	const char* filename_;
 	byte* buf_;
@@ -63,6 +94,24 @@ public:
 		byte& operator*() {
 			return *e_;
 		}
+
+		void find_first_syncbyte() {
+			while(1) {
+				if(*(operator++()) == 0x47) {
+					break;
+				}
+			}
+		}
+
+		void push_packet(TSPacket& p) {
+			while(1) {
+				p.push_back(*e_);
+
+				if(*(operator++()) == 0x47) {
+					break;
+				}
+			}
+		}
 	};
 
 	iterator begin() {
@@ -74,37 +123,6 @@ public:
 	}
 };
 
-class TSPacket {
-	byte* buf_;
-	int size_;
-
-public:
-	TSPacket()
-	: size_(0),
-	  buf_(new byte[size_])
-	{}
-
-	~TSPacket() {
-		delete[] buf_;
-	}
-
-	void push_back(byte& e) {
-		buf_[size_++] = e;
-	}
-
-	void pretty_print() {
-		for(int i = 0; i < size_; ++i) {
-			printf("%X ", buf_[i]);
-		}
-
-		printf("\n");
-	}
-
-	int get_size() {
-		return size_;
-	}
-};
-
 int main() {
 	VideoFile vf("sample.ts");
 	TSPacket p;
@@ -113,20 +131,8 @@ int main() {
 	vf.read_file();
 
 	VideoFile::iterator it = vf.begin();
-
-	while(1) {
-		if(*(++it) == 0x47) {
-			break;
-		}
-	}
-
-	while(1) {
-		p.push_back(*it);
-
-		if(*(++it) == 0x47) {
-			break;
-		}
-	}
-
+	it.find_first_syncbyte();
+	it.push_packet(p);
+	
 	p.pretty_print();
 }
