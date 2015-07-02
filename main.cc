@@ -43,10 +43,6 @@ public:
 		pid_ = buf_[2];
 	}
 
-	void set_pid(byte& pid) {
-		pid_ = pid;
-	}
-
 	int get_pid() {
 		return pid_;
 	}
@@ -59,9 +55,11 @@ public:
 class VideoFile {
 	const char* filename_;
 	byte* buf_;
+	byte* curr_byte_;
 	FILE* file_ = NULL;
-	long pos_;
+
 	long end_;
+	int position_;
 
 public:
 	VideoFile(const char* filename)
@@ -79,7 +77,7 @@ public:
 	}
 
 	void set_file_size() {
-		pos_ = ftell(file_);
+		long pos_ = ftell(file_);
 		fseek(file_, 0, 2);
 		end_ = ftell(file_);
 		fseek(file_, pos_, 0);
@@ -88,80 +86,44 @@ public:
 	void read_file() {
 		buf_ = new byte[end_];
 		fread(buf_, end_, 1, file_);
+		curr_byte_ = buf_;
 	}
 
-	class iterator {
-		byte* e_;
-
-		iterator(byte* ptr)
-		: e_(ptr)
-		{}
-
-		friend class VideoFile;
-	public:
-		iterator operator++() {
-			e_++;
-			return *this;
+	void find_first_syncbyte() {
+		while(1) {
+			if(*(++curr_byte_) == 0x47) {
+				//curr_byte_--;
+				break;
+			}
 		}
+	}
 
-		bool operator==(const iterator& other) {
-			return e_ == other.e_;
-		}
+	void setup() {
+		set_file_size();
+		read_file();
+		find_first_syncbyte();
+	}
 
-		bool operator!=(const iterator& other) {
-			return !operator==(other);
-		}
+	void get_next_packet(Packet& p) {
+		while(1) {
+			p.push_back(*curr_byte_);
 
-		byte& operator*() {
-			return *e_;
-		}
-
-		void find_first_syncbyte() {
-			while(1) {
-				if(*(operator++()) == 0x47) {
-					break;
-				}
+			if(*(++curr_byte_) == 0x47) {
+				break;
 			}
 		}
 
-		void push_packet(Packet& p) {
-			while(1) {
-				p.push_back(*e_);
-
-				if(*(operator++()) == 0x47) {
-					break;
-				}
-			}
-
-			p.set_pid();
-		}
-	};
-
-	iterator begin() {
-		return iterator(buf_);
+		p.set_pid();
 	}
-
-	/* iterator end() {
-		return iterator(buf_ + end_);
-	} */
 };
 
 int main() {
 	VideoFile vf("sample.ts");
 	Packet p;
 
-	vf.set_file_size();
-	vf.read_file();
+	vf.setup();
 
-	VideoFile::iterator it = vf.begin();
-	it.find_first_syncbyte();
+	vf.get_next_packet(p);
 
-	it.push_packet(p);
-	p.pretty_print();
-
-	cout << endl;
-	p.clear();
-
-	it.push_packet(p);
 	p.pretty_print();
 }
