@@ -4,17 +4,18 @@ using namespace std;
 
 typedef unsigned char byte;
 
-class TSPacket {
+class Packet {
 	byte* buf_;
 	int size_;
+	int pid_;
 
 public:
-	TSPacket()
+	Packet()
 	: size_(0),
-	  buf_(new byte[size_])
+	  buf_(new byte[188])
 	{}
 
-	~TSPacket() {
+	~Packet() {
 		delete[] buf_;
 	}
 
@@ -23,11 +24,31 @@ public:
 	}
 
 	void pretty_print() {
+		printf("PID: %d\n\n", pid_);
+
 		for(int i = 0; i < size_; ++i) {
 			printf("%X ", buf_[i]);
 		}
 
 		printf("\n");
+	}
+
+	void clear() {
+		delete[] buf_;
+		size_ = 0;
+		buf_ = new byte[188];
+	}
+
+	void set_pid() {
+		pid_ = buf_[2];
+	}
+
+	void set_pid(byte& pid) {
+		pid_ = pid;
+	}
+
+	int get_pid() {
+		return pid_;
 	}
 
 	int get_size() {
@@ -103,7 +124,7 @@ public:
 			}
 		}
 
-		void push_packet(TSPacket& p) {
+		void push_packet(Packet& p) {
 			while(1) {
 				p.push_back(*e_);
 
@@ -111,6 +132,8 @@ public:
 					break;
 				}
 			}
+
+			p.set_pid();
 		}
 	};
 
@@ -118,21 +141,27 @@ public:
 		return iterator(buf_);
 	}
 
-	iterator end() {
+	/* iterator end() {
 		return iterator(buf_ + end_);
-	}
+	} */
 };
 
 int main() {
 	VideoFile vf("sample.ts");
-	TSPacket p;
+	Packet p;
 
 	vf.set_file_size();
 	vf.read_file();
 
 	VideoFile::iterator it = vf.begin();
 	it.find_first_syncbyte();
+
 	it.push_packet(p);
-	
+	p.pretty_print();
+
+	cout << endl;
+	p.clear();
+
+	it.push_packet(p);
 	p.pretty_print();
 }
