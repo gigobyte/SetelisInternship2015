@@ -5,15 +5,14 @@
 #include "videofile.hh"
 using namespace std;
 
-
-
 int main() {
 	VideoFile vf("sample.ts");
-	Packet p;
 
 	vf.setup();
 
-	vf.get_next_packet(p);
+	Packet p;
 
+	vf.get_next_packet(p);
 	p.pretty_print();
+	p.clear();
 }

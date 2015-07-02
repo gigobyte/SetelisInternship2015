@@ -40,7 +40,6 @@ void
 VideoFile::find_first_syncbyte() {
 	while(1) {
 		if(*(++curr_byte_) == 0x47) {
-			//curr_byte_--;
 			break;
 		}
 	}
@@ -51,17 +50,34 @@ VideoFile::setup() {
 	set_file_size();
 	read_file();
 	find_first_syncbyte();
+	set_pat();
 }
 
 void
 VideoFile::get_next_packet(Packet& p) {
-	while(1) {
+	for(int i = 0; i < 188; ++i, ++curr_byte_) {
 		p.push_back(*curr_byte_);
-
-		if(*(++curr_byte_) == 0x47) {
-			break;
-		}
 	}
 
 	p.set_pid();
+}
+
+void
+VideoFile::reset_packet_counter() {
+	curr_byte_ = buf_;
+}
+
+void
+VideoFile::set_pat() {
+	while(pat_.get_pid() != 0) {
+		pat_.clear();
+		get_next_packet(pat_);
+	}
+
+	reset_packet_counter();
+}
+
+Packet&
+VideoFile::get_pat() {
+	return pat_;
 }

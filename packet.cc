@@ -7,7 +7,8 @@ typedef unsigned char byte;
 
 Packet::Packet()
 : size_(0),
-  buf_(new byte[188])
+  buf_(new byte[188]),
+  pid_(-1)
 {}
 
 Packet::~Packet() {
@@ -21,8 +22,6 @@ Packet::push_back(byte& e) {
 
 void
 Packet::pretty_print() {
-	printf("PID: %d\n\n", pid_);
-
 	for(int i = 0; i < size_; ++i) {
 		printf("%X ", buf_[i]);
 	}
@@ -39,7 +38,7 @@ Packet::clear() {
 
 void
 Packet::set_pid() {
-	pid_ = buf_[2];
+	pid_ = buf_[1] + buf_[2];
 }
 
 int
