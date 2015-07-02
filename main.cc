@@ -7,12 +7,12 @@ using namespace std;
 
 int main() {
 	VideoFile vf("sample.ts");
-
 	vf.setup();
 
-	Packet p;
+	Packet pat;
 
-	vf.get_next_packet(p);
-	p.pretty_print();
-	p.clear();
+	do {
+		pat.clear();
+		vf.get_next_packet(pat);
+	} while(pat.get_pid() != 0x0);
 }

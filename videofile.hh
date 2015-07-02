@@ -10,7 +10,6 @@ class VideoFile {
 	byte* buf_;
 	byte* curr_byte_;
 	FILE* file_ = NULL;
-	Packet pat_;
 
 	long end_;
 	int position_;
@@ -23,10 +22,9 @@ public:
 	void read_file();
 	void find_first_syncbyte();
 	void setup();
-	void get_next_packet(Packet& p);
+	int get_next_packet(Packet& p);
 	void reset_packet_counter();
-	void set_pat();
-	Packet& get_pat();
+	void pretty_print();
 };
 
 #endif

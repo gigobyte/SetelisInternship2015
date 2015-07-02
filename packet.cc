@@ -38,7 +38,13 @@ Packet::clear() {
 
 void
 Packet::set_pid() {
-	pid_ = buf_[1] + buf_[2];
+	//pid_ = (buf_[1] << 8) | (buf_[2] & 0xff);
+	pid_ = ((buf_[1] & 31) << 8 | buf_[2]);
+}
+
+void
+Packet::set_psi() {
+	psi_ = (buf_[1] & 0x40) >> 6;
 }
 
 int
@@ -49,4 +55,9 @@ Packet::get_pid() {
 int
 Packet::get_size() {
 	return size_;
+}
+
+int
+Packet::valid() {
+	return buf_[0] == 0x47;
 }
