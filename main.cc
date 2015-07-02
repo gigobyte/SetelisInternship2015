@@ -1,5 +1,13 @@
 #include <stdio.h>
 #include <iostream>
+<<<<<<< HEAD
+
+#include "packet.hh"
+#include "videofile.hh"
+using namespace std;
+
+
+=======
 using namespace std;
 
 typedef unsigned char byte;
@@ -116,6 +124,7 @@ public:
 		p.set_pid();
 	}
 };
+>>>>>>> origin/master
 
 int main() {
 	VideoFile vf("sample.ts");
