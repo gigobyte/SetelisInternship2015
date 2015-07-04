@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <inttypes.h>
 
 #include "packet.hh"
 
 using namespace std;
-typedef unsigned char byte;
+typedef uint8_t byte;
 
 Packet::Packet()
 : size_(0),
@@ -94,13 +95,19 @@ Packet::parse() {
 	printf("last_section_number_ = %d\n", last_section_number_);
 	printf("\n\n");
 
-	for(int i = 13; i < stop-17; i+=4) {
+	for(int i = 13; i < stop-8; i+=4) {
 		printf("program number = %d\n", (buf_[i] << 8 ) | (buf_[i+1] & 0xff));
 
-		byte pmPID = buf_[i+2] << 3;
+		/*byte pmPID = buf_[i+2] << 3;
 		pmPID = pmPID >> 3;
-		pmPID = (pmPID << 8 ) | (buf_[i+3] & 0xff);
+		pmPID = (pmPID << 8 ) | (buf_[i+3] & 0xff); */
+
+		//byte pmPID = buf_[i+3] | ((buf_[i+2] & 0x1F) << 8);
+		uint16_t pmPID = static_cast<uint16_t>(buf_[i+3]) | (static_cast<uint16_t>(buf_[i+2] & 0x1F) << 8);
 
 		printf("program map PID = %d\n", pmPID);
 	}
+
+	printf("CRC: %X %X %X %X\n", buf_[stop-5], buf_[stop-4],
+								 buf_[stop-3], buf_[stop-2]);
 }

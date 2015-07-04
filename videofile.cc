@@ -1,11 +1,12 @@
 #include <iostream>
 #include <stdio.h>
+#include <inttypes.h>
 using namespace std;
 
 #include "videofile.hh"
 #include "packet.hh"
 
-typedef unsigned char byte;
+typedef uint8_t byte;
 
 VideoFile::VideoFile(const char* filename)
 : filename_(filename)

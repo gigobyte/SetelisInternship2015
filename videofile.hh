@@ -1,9 +1,10 @@
 #ifndef VIDEOFILE_H
 #define VIDEOFILE_H
 
+#include <inttypes.h>
 #include "packet.hh"
 
-typedef unsigned char byte;
+typedef uint8_t byte;
 
 class VideoFile {
 	const char* filename_;

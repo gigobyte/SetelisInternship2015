@@ -1,7 +1,9 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-typedef unsigned char byte;
+#include <inttypes.h>
+
+typedef uint8_t byte;
 
 class Packet {
 	byte* buf_;
