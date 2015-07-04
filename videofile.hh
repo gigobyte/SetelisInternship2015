@@ -24,7 +24,6 @@ public:
 	void setup();
 	int get_next_packet(Packet& p);
 	void reset_packet_counter();
-	void pretty_print();
 };
 
 #endif

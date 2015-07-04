@@ -21,6 +21,7 @@ public:
 	int get_pid();
 	int get_size();
 	int valid();
+	byte operator[](int index);
 };
 
 #endif

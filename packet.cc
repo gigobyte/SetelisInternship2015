@@ -61,3 +61,8 @@ int
 Packet::valid() {
 	return buf_[0] == 0x47;
 }
+
+byte
+Packet::operator[](int index) {
+	return buf_[index];
+}
