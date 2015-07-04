@@ -54,13 +54,26 @@ VideoFile::setup() {
 	find_first_syncbyte();
 }
 
-int
+void
 VideoFile::get_next_packet(Packet& p) {
 	for(int i = 0; i < 188; ++i, ++curr_byte_) {
 		p.push_back(*curr_byte_);
 	}
 
 	p.set_pid();
+}
 
-	return p.valid();
+void
+VideoFile::reset_packet_counter() {
+	curr_byte_ = buf_;
+}
+
+void
+VideoFile::find_pat(Packet& pat) {
+	//"TS Packets containing PAT information
+	//always have PID 0x0000."
+	do {
+		pat.clear();
+		get_next_packet(pat);
+	} while(pat.get_pid() != 0x0);
 }

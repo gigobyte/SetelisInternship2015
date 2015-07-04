@@ -22,8 +22,9 @@ public:
 	void read_file();
 	void find_first_syncbyte();
 	void setup();
-	int get_next_packet(Packet& p);
+	void get_next_packet(Packet& p);
 	void reset_packet_counter();
+	void find_pat(Packet& pat);
 };
 
 #endif
