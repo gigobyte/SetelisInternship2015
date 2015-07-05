@@ -8,8 +8,9 @@ typedef uint8_t byte;
 
 Packet::Packet()
 : size_(0),
-  buf_(new byte[188]),
-  pid_(-1)
+  buf_(new uint8_t[188]),
+  pid_(-1),
+  program_count_(0)
 {}
 
 Packet::~Packet() {
@@ -17,7 +18,7 @@ Packet::~Packet() {
 }
 
 void
-Packet::push_back(byte& e) {
+Packet::push_back(uint8_t& e) {
 	buf_[size_++] = e;
 }
 
@@ -34,7 +35,7 @@ void
 Packet::clear() {
 	delete[] buf_;
 	size_ = 0;
-	buf_ = new byte[188];
+	buf_ = new uint8_t[188];
 }
 
 void
@@ -63,51 +64,51 @@ Packet::valid() {
 	return buf_[0] == 0x47;
 }
 
-byte
+uint8_t
 Packet::operator[](int index) {
 	return buf_[index];
 }
 
 void
 Packet::parse() {
-	table_id_ = buf_[5];
-	section_length_ = buf_[7];
-	transport_stream_id_ = (buf_[8] << 8 ) | (buf_[9] & 0xff);
+	if(pid_ == 0x0) {
+		table_id_ = buf_[5];
+		section_length_ = buf_[7];
+		transport_stream_id_ = (buf_[8] << 8 ) | (buf_[9] & 0xff);
 
-	version_number_ = (buf_[10] << 2);
-	version_number_ = version_number_ >> 3;
+		version_number_ = (buf_[10] << 2);
+		version_number_ = version_number_ >> 3;
 
-	current_next_indicator_ = buf_[10] << 7;
-	current_next_indicator_ = current_next_indicator_ >> 7;
+		current_next_indicator_ = buf_[10] << 7;
+		current_next_indicator_ = current_next_indicator_ >> 7;
 
-	section_number_ = buf_[11];
-	last_section_number_ = buf_[12];
+		section_number_ = buf_[11];
+		last_section_number_ = buf_[12];
 
-	int stop = 0;
-	while(buf_[stop++] != 0xFF);
+		int stop = 0;
+		while(buf_[stop++] != 0xFF);
 
-	printf("table_id_ = %d\n", table_id_);
-	printf("section_length_ = %d\n", section_length_);
-	printf("transport_stream_id_ = %d\n", transport_stream_id_);
-	printf("version_number_ = %d\n", version_number_);
-	printf("current_next_indicator_ = %d\n", current_next_indicator_);
-	printf("section_number_ = %d\n", section_number_);
-	printf("last_section_number_ = %d\n", last_section_number_);
-	printf("\n\n");
+		printf("table_id_ = %d\n", table_id_);
+		printf("section_length_ = %d\n", section_length_);
+		printf("transport_stream_id_ = %d\n", transport_stream_id_);
+		printf("version_number_ = %d\n", version_number_);
+		printf("current_next_indicator_ = %d\n", current_next_indicator_);
+		printf("section_number_ = %d\n", section_number_);
+		printf("last_section_number_ = %d\n", last_section_number_);
+		printf("\n\n");
 
-	for(int i = 13; i < stop-8; i+=4) {
-		printf("program number = %d\n", (buf_[i] << 8 ) | (buf_[i+1] & 0xff));
+		for(int i = 13; i < stop-8; i+=4, program_count_++);
 
-		/*byte pmPID = buf_[i+2] << 3;
-		pmPID = pmPID >> 3;
-		pmPID = (pmPID << 8 ) | (buf_[i+3] & 0xff); */
+		pmts = new uint16_t[program_count_];
+		program_nums = new uint8_t[program_count_];
+		int j = 0;
 
-		//byte pmPID = buf_[i+3] | ((buf_[i+2] & 0x1F) << 8);
-		uint16_t pmPID = static_cast<uint16_t>(buf_[i+3]) | (static_cast<uint16_t>(buf_[i+2] & 0x1F) << 8);
+		for(int i = 13; i < stop-8; i+=4, j++) {
+			pmts[j] = static_cast<uint16_t>(buf_[i+3]) | (static_cast<uint16_t>(buf_[i+2] & 0x1F) << 8);
+			program_nums[j] = (buf_[i] << 8 ) | (buf_[i+1] & 0xff);
+		}
 
-		printf("program map PID = %d\n", pmPID);
+		printf("CRC: %X %X %X %X\n", buf_[stop-5], buf_[stop-4],
+									 buf_[stop-3], buf_[stop-2]);
 	}
-
-	printf("CRC: %X %X %X %X\n", buf_[stop-5], buf_[stop-4],
-								 buf_[stop-3], buf_[stop-2]);
 }

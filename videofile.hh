@@ -4,12 +4,10 @@
 #include <inttypes.h>
 #include "packet.hh"
 
-typedef uint8_t byte;
-
 class VideoFile {
 	const char* filename_;
-	byte* buf_;
-	byte* curr_byte_;
+	uint8_t* buf_;
+	uint8_t* curr_byte_;
 	FILE* file_ = NULL;
 
 	long end_;

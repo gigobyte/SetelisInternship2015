@@ -3,27 +3,30 @@
 
 #include <inttypes.h>
 
-typedef uint8_t byte;
-
 class Packet {
-	byte* buf_;
 	int size_;
-	byte pid_;
 	int psi_;
-	byte table_id_;
-	byte section_syntax_indicator_;
-	byte section_length_;
-	byte section_number_;
-	byte last_section_number_;
-	byte current_next_indicator_;
-	byte transport_stream_id_;
-	byte version_number_;
+	int program_count_;
+
+	uint8_t* buf_;
+	uint8_t* program_nums;
+	uint16_t* pmts;
+
+	uint8_t pid_;
+	uint8_t table_id_;
+	uint8_t section_syntax_indicator_;
+	uint8_t section_length_;
+	uint8_t section_number_;
+	uint8_t last_section_number_;
+	uint8_t current_next_indicator_;
+	uint8_t transport_stream_id_;
+	uint8_t version_number_;
 
 public:
 	Packet();
 	~Packet();
 
-	void push_back(byte& e);
+	void push_back(uint8_t& e);
 	void pretty_print();
 	void clear();
 	void set_pid();
@@ -32,7 +35,7 @@ public:
 	int get_pid();
 	int get_size();
 	int valid();
-	byte operator[](int index);
+	uint8_t operator[](int index);
 };
 
 #endif

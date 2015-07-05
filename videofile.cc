@@ -6,8 +6,6 @@ using namespace std;
 #include "videofile.hh"
 #include "packet.hh"
 
-typedef uint8_t byte;
-
 VideoFile::VideoFile(const char* filename)
 : filename_(filename)
 {
@@ -32,7 +30,7 @@ VideoFile::set_file_size() {
 
 void
 VideoFile::read_file() {
-	buf_ = new byte[end_];
+	buf_ = new uint8_t[end_];
 	fread(buf_, end_, 1, file_);
 	curr_byte_ = buf_;
 }
