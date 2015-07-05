@@ -1,4 +1,3 @@
-#include <iostream>
 #include <stdio.h>
 #include <inttypes.h>
 using namespace std;
@@ -11,7 +10,7 @@ VideoFile::VideoFile(const char* filename)
 {
 	file_ = fopen(filename_, "rb");
 	if(file_ == NULL) {
-		cerr << "fopen() failed" << endl;
+		fprintf(stderr, "fopen() failed\n");
 	}
 }
 
@@ -68,11 +67,9 @@ VideoFile::reset_packet_counter() {
 }
 
 void
-VideoFile::find_pat(Packet& pat) {
-	//"TS Packets containing PAT information
-	//always have PID 0x0000."
+VideoFile::find_packet(Packet& p, uint16_t pid) {
 	do {
-		pat.clear();
-		get_next_packet(pat);
-	} while(pat.get_pid() != 0x0);
+		p.clear();
+		get_next_packet(p);
+	} while(p.get_pid() != pid);
 }

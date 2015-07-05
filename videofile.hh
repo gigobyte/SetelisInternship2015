@@ -23,7 +23,7 @@ public:
 	void setup();
 	void get_next_packet(Packet& p);
 	void reset_packet_counter();
-	void find_pat(Packet& pat);
+	void find_packet(Packet& p, uint16_t pid);
 };
 
 #endif

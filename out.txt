@@ -1,0 +1,120 @@
+pat = {
+	table_id=0, section_length=49, transport_stream_id=20
+	version_number=11, current_next_indicator=1, section_number=0
+	last_section_number=0
+	pmts = {
+		[16,0 (nit)]
+		[36,1]
+		[37,2]
+		[48,3]
+		[49,4]
+		[103,26]
+		[111,28]
+		[1009,17309]
+		[1015,17315]
+		[1024,17324]
+	}
+}
+
+pmt with pid 36 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=1, version_number=2, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=32, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=32, es_info_len=0
+		stream_type=3, elem_pid=33, es_info_len=0
+	}
+}
+
+pmt with pid 37 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=2, version_number=1, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=34, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=34, es_info_len=0
+		stream_type=3, elem_pid=35, es_info_len=0
+	}
+}
+
+pmt with pid 48 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=3, version_number=1, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=44, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=44, es_info_len=0
+		stream_type=3, elem_pid=45, es_info_len=0
+	}
+}
+
+pmt with pid 49 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=4, version_number=2, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=46, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=46, es_info_len=0
+		stream_type=3, elem_pid=47, es_info_len=0
+	}
+}
+
+pmt with pid 103 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=26, version_number=1, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=43, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=43, es_info_len=0
+		stream_type=3, elem_pid=90, es_info_len=0
+	}
+}
+
+pmt with pid 111 = {
+	table_id=2, section_syntax_indicator=0, section_length=23
+	program_number=28, version_number=1, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=109, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=109, es_info_len=0
+		stream_type=3, elem_pid=110, es_info_len=0
+	}
+}
+
+pmt with pid 1009 = {
+	table_id=2, section_syntax_indicator=0, section_length=51
+	program_number=17309, version_number=3, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=2009, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=2009, es_info_len=0
+		stream_type=4, elem_pid=3009, es_info_len=6
+		stream_type=10, elem_pid=1124, es_info_len=1397
+		stream_type=0, elem_pid=1260, es_info_len=1520
+		stream_type=6, elem_pid=2564, es_info_len=1390
+		stream_type=103, elem_pid=4, es_info_len=3209
+		stream_type=240, elem_pid=1546, es_info_len=1126
+		stream_type=0, elem_pid=0, es_info_len=0
+		stream_type=0, elem_pid=0, es_info_len=0
+	}
+}
+
+pmt with pid 1015 = {
+	table_id=2, section_syntax_indicator=0, section_length=28
+	program_number=17315, version_number=4, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=2015, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=2015, es_info_len=0
+		stream_type=4, elem_pid=3015, es_info_len=0
+		stream_type=4, elem_pid=4015, es_info_len=0
+	}
+}
+
+pmt with pid 1024 = {
+	table_id=2, section_syntax_indicator=0, section_length=40
+	program_number=17324, version_number=2, current_next_indicator=1
+	section_number=0, last_section_number=0, pcr_pid=2024, program_info_length=0
+	streams = {
+		stream_type=2, elem_pid=2024, es_info_len=0
+		stream_type=3, elem_pid=3024, es_info_len=6
+		stream_type=10, elem_pid=1138, es_info_len=1395
+		stream_type=0, elem_pid=1017, es_info_len=752
+		stream_type=6, elem_pid=2564, es_info_len=1390
+		stream_type=0, elem_pid=0, es_info_len=0
+	}
+}
+
