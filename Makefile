@@ -1,3 +1,5 @@
+CXXFLAGS =-std=c++0x
+
 all: mpeg
 
 packet.o: packet.cc packet.hh
