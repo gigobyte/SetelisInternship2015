@@ -66,7 +66,7 @@ class Analyser(object):
 				final_str += "BO"
 				final_str += format[-1] + "-"
 
-			return final_str[0:-2]
+			return final_str[0:-1]
 
 	def export(self, title='Results', out='output.csv'):
 		if out.split(".")[-1] == 'svg':
