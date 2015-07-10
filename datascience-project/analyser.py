@@ -64,15 +64,25 @@ class Analyser(object):
 		else:
 			for format in formats:
 				final_str += "BO"
-				final_str += format[-1] + ", "
+				final_str += format[-1] + "-"
 
 			return final_str[0:-2]
 
-	def plot(self, title='Results', out='output.svg'):
-		chart = pygal.Line()
-		chart.title = title
-		for rule, profits in zip(self.rules, self.all_profits):
-			rule_str = "{0}, {1}%-{2}%".format(self.abbr_formats(rule[2]), rule[1][0], rule[1][-1])
-			chart.add(rule_str, profits)
+	def export(self, title='Results', out='output.csv'):
+		if out.split(".")[-1] == 'svg':
+			chart = pygal.Line()
+			chart.title = title
+			for rule, profits in zip(self.rules, self.all_profits):
+				rule_str = "{0}, {1}%-{2}%".format(self.abbr_formats(rule[2]), rule[1][0], rule[1][-1])
+				chart.add(rule_str, profits)
 
-		chart.render_to_file(out)
+			chart.render_to_file(out)
+
+		elif out.split(".")[-1] == 'csv':
+			with open(out, 'ab+') as csvfile:
+				csvfile.write('Formats, Percents, Profit after 1000 bets (in $)\n')
+				final_profits = [x[-1] for x in self.all_profits]
+
+				for rule, profits in zip(self.rules, final_profits):
+					rule_str = "{0},{1}%-{2}%,{3}\n".format(self.abbr_formats(rule[2]), rule[1][0], rule[1][-1], profits)
+					csvfile.write(rule_str)
