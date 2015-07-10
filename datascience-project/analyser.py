@@ -11,6 +11,11 @@ class Analyser(object):
 			if(db.split(".")[-1] == 'csv'):
 				self.matches = [row for row in csv.reader(dbfile) if self.is_valid(row)]
 
+	def clear(self):
+		self.rules = []
+		self.profit = [0]
+		self.all_profits = []
+
 	def add_rule(self, bet_value, percents, formats):
 		assert isinstance(bet_value, int)
 		assert isinstance(percents, tuple)
@@ -42,6 +47,10 @@ class Analyser(object):
 						self.profit.append(self.profit[-1] + rule[0] * winner[1])
 					elif loser[0] in rule[1]:
 						self.profit.append(self.profit[-1] - rule[0])
+					else:
+						self.profit.append(self.profit[-1])
+				else:
+					self.profit.append(self.profit[-1])
 
 			self.all_profits.append(self.profit)
 			self.profit = [0]
@@ -59,9 +68,9 @@ class Analyser(object):
 
 			return final_str[0:-2]
 
-	def plot(self, out='output.svg'):
+	def plot(self, title='Results', out='output.svg'):
 		chart = pygal.Line()
-		chart.title = 'Results from betting'
+		chart.title = title
 		for rule, profits in zip(self.rules, self.all_profits):
 			rule_str = "{0}, {1}%-{2}%".format(self.abbr_formats(rule[2]), rule[1][0], rule[1][-1])
 			chart.add(rule_str, profits)
